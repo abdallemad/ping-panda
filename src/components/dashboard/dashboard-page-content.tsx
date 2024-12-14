@@ -11,12 +11,13 @@ import { useState } from "react";
 import LoadingSpinner from "../globals/LoadingSpinner";
 import { Button, buttonVariants } from "../ui/button";
 import { Modal } from "../ui/modal";
+import DashboardEmptyState from "./dashboard-empty-state";
 
 function DashboardPageContent() {
   const queryClient = useQueryClient();
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null);
   const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
-    queryKey: ["user-event-category"],
+    queryKey: ["user-event-categories"],
     queryFn: async () => await getEventCategoriesAction(),
   });
 
@@ -25,8 +26,9 @@ function DashboardPageContent() {
       await deleteEventCategoryAction(categoryName),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: ["user-event-category"],
+        queryKey: ["user-event-categories"],
       });
+      setDeletingCategory(null);
     },
   });
 
@@ -37,7 +39,7 @@ function DashboardPageContent() {
         <LoadingSpinner />
       </div>
     );
-  if (!categories || categories.length === 0) return <div>empty state</div>;
+  if (!categories || categories.length === 0) return <DashboardEmptyState />
   return (
     <>
       <ul className="grid max-w-6xl grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">

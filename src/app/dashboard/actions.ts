@@ -1,6 +1,8 @@
 "use server";
 
 import db from "@/db";
+import { parseColor } from "@/lib/utils";
+import { EVENT_CATEGORY_VALIDATION } from "@/lib/validator/category-validator";
 import { currentUser } from "@clerk/nextjs/server";
 import { startOfMonth } from "date-fns";
 
@@ -97,3 +99,53 @@ async function getAuth() {
   // console.log(dbUser);
   return dbUser;
 }
+
+export const createEventCategoryAction = async (
+  data: EVENT_CATEGORY_VALIDATION
+) => {
+  const user = await getAuth();
+
+  // TODO: ADD PAID PLANS
+
+  const eventCategory = await db.eventCategory.create({
+    data: {
+      name: data.name.toLowerCase(),
+      color: parseColor(data.color),
+      emoji: data.emoji,
+      userId: user.id,
+    },
+  });
+  console.log("data");
+  return eventCategory;
+};
+
+export const insertQuickEventCategoryAction = async () => {
+  const user = await getAuth();
+
+  const eventCategory = await db.eventCategory.createMany({
+    data: [
+      {
+        name: "Bug",
+        color: 0xFDCB6E,
+        emoji: "🐛",
+        userId: user.id,
+      },
+      {
+        name: "Sale",
+        color: 0xFF6B6B,
+        emoji: "🤑",
+        userId: user.id,
+      },
+      {
+        name: "Question",
+        color: 0x6c5ce7,
+        emoji: "🤔",
+        userId: user.id,
+      },
+    ].map(category=>({
+      ...category,
+      userId:user.id
+    }))
+  });
+  return {success:true, data:eventCategory.count}
+};
