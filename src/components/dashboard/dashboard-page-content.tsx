@@ -39,11 +39,12 @@ function DashboardPageContent() {
         <LoadingSpinner />
       </div>
     );
-  if (!categories || categories.length === 0) return <DashboardEmptyState />
+  if (!categories || categories.length === 0) return <DashboardEmptyState />;
   return (
     <>
       <ul className="grid max-w-6xl grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {categories?.map((category) => {
+          console.log(category.lastPing);
           return (
             <li
               key={category.id}
@@ -88,7 +89,7 @@ function DashboardPageContent() {
                     <span className="font-medium">Last ping:</span>
                     <span className="ml-1">
                       {category.lastPing
-                        ? formatDistanceToNow(category.lastPing + "ago")
+                        ? 'formatDistanceToNow(category.lastPing + "ago")'
                         : "Never"}
                     </span>
                   </div>
@@ -150,9 +151,7 @@ function DashboardPageContent() {
               onClick={() => deleteEventCategory(deletingCategory!)}
               disabled={isDeleting}
             >
-              {
-                isDeleting ?'Deleting...':'Delete'
-              }
+              {isDeleting ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </div>

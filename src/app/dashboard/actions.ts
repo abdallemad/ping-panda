@@ -125,19 +125,19 @@ export const insertQuickEventCategoryAction = async () => {
   const eventCategory = await db.eventCategory.createMany({
     data: [
       {
-        name: "Bug",
+        name: "bug",
         color: 0xFDCB6E,
         emoji: "🐛",
         userId: user.id,
       },
       {
-        name: "Sale",
+        name: "sale",
         color: 0xFF6B6B,
         emoji: "🤑",
         userId: user.id,
       },
       {
-        name: "Question",
+        name: "question",
         color: 0x6c5ce7,
         emoji: "🤔",
         userId: user.id,

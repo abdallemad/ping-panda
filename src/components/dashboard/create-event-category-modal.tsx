@@ -1,6 +1,5 @@
 "use client";
 import { EVENT_CATEGORY_VALIDATION } from "@/lib/validator/category-validator";
-
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

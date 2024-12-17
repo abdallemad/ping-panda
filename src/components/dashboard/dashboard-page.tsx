@@ -1,8 +1,9 @@
-"use server";
+"use client";
 import { ArrowLeft } from "lucide-react";
 import React from "react";
 import Heading from "../globals/Heading";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface Props {
   title: string;
@@ -10,14 +11,15 @@ interface Props {
   hideBackButton?: boolean;
   cta?: React.ReactNode;
 }
-async function DashboardPage({ title, children, hideBackButton, cta }: Props) {
+function DashboardPage({ title, children, hideBackButton, cta }: Props) {
+  const router = useRouter();
   return (
     <section className="flex-1 h-full w-full flex flex-col">
       <div className="w-full p-6 sm:p-8 flex justify-between border-b border-gray-200">
         <div className=" w-full flex flex-col sm:flex-row sm:items-center gap-y-2 gap-x-8">
           <div className="flex flex-wrap items-center gap-2">
             {!hideBackButton && (
-              <Button className="w-fit bg-white " variant={"outline"}>
+              <Button onClick={()=> router.push('/dashboard')} className="w-fit bg-white " variant={"outline"}>
                 <ArrowLeft className="size-4" />
               </Button>
             )}
