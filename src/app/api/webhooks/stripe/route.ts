@@ -5,13 +5,14 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = (await headers()).get("stripe-signature");
+    const signature = (await headers()).get("stripe-signature");
+    if (!signature) return new Response("Invalid signature.", { status: 400 });
 
-  const event = stripe.webhooks.constructEvent(
-    body,
-    signature || "",
-    process.env.STRIPE_WEBHOOK_SECRET || ""
-  );
+    const event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET as string
+    );
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const { userId } = session.metadata || { userId: '' };
