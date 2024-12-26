@@ -1,32 +1,36 @@
-"use client";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { getPlanAction } from "./category/[name]/action";
-import { Modal } from "@/components/ui/modal";
-import LoadingSpinner from "@/components/globals/LoadingSpinner";
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
-import Image from "next/image";
+"use client"
 
-function PaymentSuccessModal() {
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+import { useQuery } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+
+import { CheckIcon } from "lucide-react"
+import { getPlanAction } from "./category/[name]/action"
+import { Modal } from "@/components/ui/modal"
+import LoadingSpinner from "@/components/globals/LoadingSpinner"
+import { Button } from "@/components/ui/button"
+
+export const PaymentSuccessModal = () => {
+  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(true)
+
   const { data, isPending } = useQuery({
     queryKey: ["user-plan"],
     queryFn: async () => {
-      return await getPlanAction();
+      return await getPlanAction()
     },
-    refetchInterval(query) {
-      if (query.state.data?.plan === "PRO") return false;
-      return 1000;
+    refetchInterval: (query) => {
+      return query.state.data?.plan === "PRO" ? false : 1000
     },
-  });
+  })
+
   const handleClose = () => {
-    setIsOpen(false);
-    router.push("/dashboard");
-  };
-  const isPaymentSuccessful = data?.plan === "PRO";
+    setIsOpen(false)
+    router.push("/dashboard")
+  }
+
+  const isPaymentSuccessful = data?.plan === "PRO"
+
   return (
     <Modal
       showModal={isOpen}
@@ -43,32 +47,32 @@ function PaymentSuccessModal() {
               Upgrading your account...
             </p>
             <p className="text-gray-600 text-sm/6 mt-2 text-center text-pretty">
-              Please wait while we process your upgrade. This might take a
-              moment.
+              Please wait while we process your upgrade. This may take a moment.
             </p>
           </div>
         ) : (
           <>
             <div className="relative aspect-video border border-gray-200 w-full overflow-hidden rounded-lg bg-gray-50">
-              <Image
-                width={400}
-                height={400}
-                src="/public/brand-asset-heart.png"
+              <img
+                src="/brand-asset-heart.png"
                 className="h-full w-full object-cover"
-                alt="payment success"
+                alt="Payment success"
               />
             </div>
+
             <div className="mt-6 flex flex-col items-center gap-1 text-center">
               <p className="text-lg/7 tracking-tight font-medium text-pretty">
-                Upgrade successful 🥳
+                Upgrade successful! 🎉
               </p>
               <p className="text-gray-600 text-sm/6 text-pretty">
-                You are now a Pro member. Enjoy the new features!
+                Thank you for upgrading to Pro and supporting PingPanda. Your
+                account has been upgraded.
               </p>
             </div>
+
             <div className="mt-8 w-full">
               <Button onClick={handleClose} className="h-12 w-full">
-                <Check className="mr-2 size-5" />
+                <CheckIcon className="mr-2 size-5" />
                 Go to Dashboard
               </Button>
             </div>
@@ -76,7 +80,5 @@ function PaymentSuccessModal() {
         )}
       </div>
     </Modal>
-  );
+  )
 }
-
-export default PaymentSuccessModal;

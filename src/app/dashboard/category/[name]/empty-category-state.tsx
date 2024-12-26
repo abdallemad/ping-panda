@@ -12,7 +12,7 @@ function EmptyCategoryState({ categoryName }: { categoryName: string }) {
     queryKey: ["category", categoryName, "hasEvents"],
     queryFn: async () => await pollCategory(categoryName),
     refetchInterval(query) {
-      return query.state.data?.hasEvents ? false : 1000;
+      return query.state.data?.hasEvents ? false : 5000;
     },
   });
   const router = useRouter();
