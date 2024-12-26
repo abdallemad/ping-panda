@@ -7,7 +7,7 @@ import CreateEventCategoryModal from "@/components/dashboard/create-event-catego
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { createCheckoutSession } from "@/lib/stripe";
-import PaymentSuccessModal from "@/components/payment-success-modal";
+import PaymentSuccessModal from "@/app/dashboard/payment-success-modal";
 interface DashboardProps {
   searchParams: {
     [key: string]: string | string[] | undefined;

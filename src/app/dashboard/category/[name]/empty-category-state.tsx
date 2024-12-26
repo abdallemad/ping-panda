@@ -15,11 +15,11 @@ function EmptyCategoryState({ categoryName }: { categoryName: string }) {
       return query.state.data?.hasEvents ? false : 1000;
     },
   });
+  const router = useRouter();
   const hasEvents = data?.hasEvents;
   useEffect(() => {
     if (hasEvents) router.refresh();
-  }, [hasEvents]);
-  const router = useRouter();
+  }, [hasEvents, router]);
   const codeSnip = `await fetch('https://localhost:3000/api/events', {
   method: 'POST',
   headers: {

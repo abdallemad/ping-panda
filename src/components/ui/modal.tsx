@@ -27,7 +27,7 @@ export const Modal = ({
     if (preventDefaultClose && !dragged) {
       return
     }
-
+    
     onClose && onClose()
 
     if (setShowModal) {

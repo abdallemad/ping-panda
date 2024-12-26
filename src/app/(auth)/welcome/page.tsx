@@ -6,7 +6,9 @@ import { LucideProps } from "lucide-react";
 import { syncUserAction } from "./action";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-function Page() {
+import React, { Suspense } from "react";
+
+function WelcomePage() {
   const searchParams = useSearchParams();
   const intent = searchParams.get("intent");
   const router = useRouter();
@@ -134,4 +136,11 @@ const BackgroundPattern = (props: LucideProps) => {
     </svg>
   );
 };
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <WelcomePage />
+  </Suspense>
+);
+
 export default Page;

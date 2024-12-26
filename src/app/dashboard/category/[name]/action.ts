@@ -106,3 +106,8 @@ export const getEventsByCategoryName = async ({
     uniqueFieldCount,
   })
 };
+
+export const getPlanAction = async ()=>{
+  const user = await getAuth();
+  return {plan:user.plan}
+}
