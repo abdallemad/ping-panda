@@ -17,15 +17,3 @@ export const updateDiscordIdAction = async (discordId: string) => {
   }
 };
 
-export const updateApiKey = async (apiKey: string) => {
-  try {
-    const user = await getAuth();
-    await db.user.update({
-      where: { externalId: user.id },
-      data: { apiKey },
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error };
-  }
-};

@@ -3,6 +3,7 @@
 import db from "@/db";
 import { currentUser } from "@clerk/nextjs/server";
 
+
 export const syncUserAction = async () => {
   const auth = await currentUser();
   if (!auth)
@@ -20,6 +21,7 @@ export const syncUserAction = async () => {
         externalId: auth.id,
         email: auth.emailAddresses[0].emailAddress,
         quotaLimit: 100,
+        apiKey: `api_${auth.id}`,
       },
     });
     return {
