@@ -8,7 +8,7 @@ export const updateDiscordIdAction = async (discordId: string) => {
   try {
     const user = await getAuth();
     await db.user.update({
-      where: { externalId: user.id },
+      where: { id: user.id },
       data: { discordId },
     });
     return { success: true };
