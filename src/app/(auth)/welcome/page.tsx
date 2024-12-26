@@ -1,24 +1,27 @@
-'use client';
+"use client";
 import Heading from "@/components/globals/Heading";
 import LoadingSpinner from "@/components/globals/LoadingSpinner";
 import { useQuery } from "@tanstack/react-query";
 import { LucideProps } from "lucide-react";
 import { syncUserAction } from "./action";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 function Page() {
+  const searchParams = useSearchParams();
+  const intent = searchParams.get("intent");
   const router = useRouter();
-  const {data} = useQuery({
+  const { data } = useQuery({
     queryKey: ["user-welcome-page"],
     queryFn: async () => await syncUserAction(),
-    refetchInterval(query){
-      if(query.state.data?.isSynced) return false
-      else return 1000
-    }
+    refetchInterval(query) {
+      if (query.state.data?.isSynced) return false;
+      else return 1000;
+    },
   });
-  useEffect(()=>{
-    if(data?.isSynced) router.push("/dashboard")
-  },[data, router])
+  useEffect(() => {
+    if (data?.isSynced)
+      router.push(intent ? `/dashboard?intent=${intent}` : "/dashboard");
+  }, [data, router, intent]);
   return (
     <div className="flex w-full flex-1 items-center justify-center px-4">
       <BackgroundPattern className="absolute inset-0 left-1/2 z-0 -translate-x-1/2 opacity-75" />

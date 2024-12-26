@@ -89,7 +89,7 @@ function DashboardPageContent() {
                     <span className="font-medium">Last ping:</span>
                     <span className="ml-1">
                       {category.lastPing
-                        ? 'formatDistanceToNow(category.lastPing + "ago")'
+                        ? formatDistanceToNow(category.lastPing || new Date() + "ago")
                         : "Never"}
                     </span>
                   </div>
@@ -135,7 +135,7 @@ function DashboardPageContent() {
               Delete category
             </h2>
             <p className="text-sm/6 text-gray-600">
-              Are you sure you want to delete the category "{deletingCategory}"?
+              Are you sure you want to delete the category {'"'}{deletingCategory}{'"'}?
               This action cannot be undone.
             </p>
           </div>

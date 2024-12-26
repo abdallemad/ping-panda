@@ -1,11 +1,15 @@
 "use client";
 import { SignIn } from "@clerk/nextjs";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 
 function Page() {
+  const searchParams = useSearchParams();
+  const intent = searchParams.get("intent");
+  
   return (
     <div className="w-full flex-1 flex items-center justify-center">
-      <SignIn path="/sing-in" routing="path" afterSignInUrl="/welcome" />
+      <SignIn forceRedirectUrl={intent ? `/welcome?intent=${intent}`:"/welcome"} />
     </div>
   );
 }

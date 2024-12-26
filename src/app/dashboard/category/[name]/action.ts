@@ -3,7 +3,6 @@ import db from "@/db";
 import { CATEGORY_NAME_VALIDATOR } from "@/lib/validator/category-validator";
 import { currentUser } from "@clerk/nextjs/server";
 import { startOfDay, startOfMonth, startOfWeek } from "date-fns";
-import { z } from "zod";
 
 async function getAuth() {
   const user = await currentUser();
@@ -20,7 +19,6 @@ async function getAuth() {
 
 export const pollCategory = async (rawName: string) => {
   const user = await getAuth();
-  CATEGORY_NAME_VALIDATOR.safeParse;
   const data = CATEGORY_NAME_VALIDATOR.safeParse(rawName);
   if (!data.success) throw new Error("please provide correct name");
   const name = data.data;
@@ -38,7 +36,7 @@ export const pollCategory = async (rawName: string) => {
   return { hasEvents };
 };
 export const getEventsByCategoryName = async ({
-  categoryName,
+  categoryName:name,
   page,
   limit,
   timeRange,
@@ -49,27 +47,26 @@ export const getEventsByCategoryName = async ({
   timeRange: "week" | "month" | "today";
 }) => {
   const user = await getAuth();
-  const { data: name, success } =
-    CATEGORY_NAME_VALIDATOR.safeParse(categoryName);
-  if (!success || page < 1 || limit < 1)
-    throw new Error("please provide correct name");
-  const now = new Date();
-  let startDate: Date;
+  const now = new Date()
+  let startDate: Date
+
   switch (timeRange) {
-    case "week":
-      startDate = startOfWeek(now, { weekStartsOn: 0 });
-      break;
     case "today":
-      startDate = startOfDay(now);
-      break;
+      startDate = startOfDay(now)
+      break
+    case "week":
+      startDate = startOfWeek(now, { weekStartsOn: 0 })
+      break
     case "month":
-      startDate = startOfMonth(now);
-      break;
+      startDate = startOfMonth(now)
+      break
   }
-  const [events, eventsCount, uniqueFieldsCount] = await Promise.all([
+
+  const [events, eventsCount, uniqueFieldCount] = await Promise.all([
     db.event.findMany({
       where: {
-        eventCategory: { name, userId: user.id, createdAt: { gte: startDate } },
+        eventCategory: { name, userId: user.id },
+        createdAt: { gte: startDate },
       },
       skip: (page - 1) * limit,
       take: limit,
@@ -77,31 +74,35 @@ export const getEventsByCategoryName = async ({
     }),
     db.event.count({
       where: {
-        eventCategory: { name, userId: user.id, createdAt: { gte: startDate } },
+        eventCategory: { name, userId: user.id },
+        createdAt: { gte: startDate },
       },
     }),
     db.event
       .findMany({
         where: {
-          eventCategory: {
-            name,
-            userId: user.id,
-            createdAt: { gte: startDate },
-          },
+          eventCategory: { name, userId: user.id },
+          createdAt: { gte: startDate },
         },
-        select: { fields: true },
+        select: {
+          fields: true,
+        },
         distinct: ["fields"],
       })
       .then((events) => {
-        const fieldsName = new Set<string>();
+        const fieldNames = new Set<string>()
         events.forEach((event) => {
-          Object.keys(event.fields as Object).forEach((key) =>
-            fieldsName.add(key)
-          );
-        });
-        return fieldsName.size;
+          Object.keys(event.fields as object).forEach((fieldName) => {
+            fieldNames.add(fieldName)
+          })
+        })
+        return fieldNames.size
       }),
-  ]);
+  ])
 
-  return { events, eventsCount, uniqueFieldsCount };
+  return ({
+    events,
+    eventsCount,
+    uniqueFieldCount,
+  })
 };
