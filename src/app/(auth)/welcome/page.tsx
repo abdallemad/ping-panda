@@ -3,10 +3,9 @@ import Heading from "@/components/globals/Heading";
 import LoadingSpinner from "@/components/globals/LoadingSpinner";
 import { useQuery } from "@tanstack/react-query";
 import { LucideProps } from "lucide-react";
-import { syncUserAction } from "./action";
-import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { syncUserAction } from "./action";
 
 function WelcomePage() {
   const searchParams = useSearchParams();

@@ -2,8 +2,8 @@
 
 import { FREE_QUOTA, PRO_QUOTA } from "@/config";
 import db from "@/db";
+import { getAuth } from "@/lib/getAuth";
 import { createCheckoutSession } from "@/lib/stripe";
-import { currentUser } from "@clerk/nextjs/server";
 import { addMonths, startOfMonth } from "date-fns";
 
 export const upgradePlanAction = async () => {
@@ -45,15 +45,3 @@ export const getUsageAction = async () => {
     resetDate
   }
 };
-
-async function getAuth() {
-  const user = await currentUser();
-  if (!user) throw new Error("You must be logged in.");
-  const dbUser = await db.user.findUnique({
-    where: {
-      externalId: user.id,
-    },
-  });
-  if (!dbUser) throw new Error("User not found");
-  return dbUser;
-}

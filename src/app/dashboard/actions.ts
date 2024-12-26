@@ -1,9 +1,9 @@
 "use server";
 
 import db from "@/db";
+import { getAuth } from "@/lib/getAuth";
 import { parseColor } from "@/lib/utils";
 import { EVENT_CATEGORY_VALIDATION } from "@/lib/validator/category-validator";
-import { currentUser } from "@clerk/nextjs/server";
 import { startOfMonth } from "date-fns";
 
 export const getEventCategoriesAction = async () => {
@@ -86,19 +86,7 @@ export const deleteEventCategoryAction = async (name: string) => {
     },
   });
 };
-async function getAuth() {
-  "use server";
-  const user = await currentUser();
-  if (!user) throw new Error("You must be logged in.");
-  const dbUser = await db.user.findUnique({
-    where: {
-      externalId: user.id,
-    },
-  });
-  if (!dbUser) throw new Error("User not found");
-  // console.log(dbUser);
-  return dbUser;
-}
+
 
 export const createEventCategoryAction = async (
   data: EVENT_CATEGORY_VALIDATION

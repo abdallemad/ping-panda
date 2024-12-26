@@ -1,21 +1,10 @@
 "use server";
 import db from "@/db";
+import { getAuth } from "@/lib/getAuth";
 import { CATEGORY_NAME_VALIDATOR } from "@/lib/validator/category-validator";
-import { currentUser } from "@clerk/nextjs/server";
 import { startOfDay, startOfMonth, startOfWeek } from "date-fns";
 
-async function getAuth() {
-  const user = await currentUser();
-  if (!user) throw new Error("You must be logged in.");
-  const dbUser = await db.user.findUnique({
-    where: {
-      externalId: user.id,
-    },
-  });
-  if (!dbUser) throw new Error("User not found");
-  // console.log(dbUser);
-  return dbUser;
-}
+
 
 export const pollCategory = async (rawName: string) => {
   const user = await getAuth();
